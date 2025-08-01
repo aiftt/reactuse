@@ -1,0 +1,66 @@
+{
+  "name": "@reactuse/core",
+  "version": "0.1.0",
+  "description": "Essential React hooks collection inspired by VueUse",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "utilities",
+    "vueuse",
+    "typescript",
+    "nextjs"
+  ],
+  "author": "ReactUse Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reactuse/reactuse.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/reactuse/reactuse/issues"
+  },
+  "homepage": "https://reactuse.org",
+  "dependencies": {
+    "@reactuse/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "jsdom": "^23.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.7.0",
+    "vitest": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "sideEffects": false
+}

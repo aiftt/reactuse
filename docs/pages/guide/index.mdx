@@ -1,0 +1,86 @@
+import { Callout, Steps } from 'nextra/components'
+
+# Getting Started
+
+Welcome to ReactUse! This guide will help you get started with using ReactUse in your React 19+ and Next.js 15+ applications.
+
+## What is ReactUse?
+
+ReactUse is a collection of essential React hooks inspired by VueUse, designed specifically for modern React applications. It provides:
+
+- **React 19+ Compatibility**: Built from the ground up for the latest React features
+- **Next.js 15+ Optimization**: Perfect integration with Next.js App Router and server components
+- **TypeScript First**: Full type safety with excellent developer experience
+- **SSR Ready**: Works seamlessly with server-side rendering
+- **Tree Shakable**: Import only what you need for optimal bundle size
+
+<Callout type="info">
+  ReactUse requires React 19+ and is optimized for Next.js 15+. For older versions, please consider using other hook libraries.
+</Callout>
+
+## Quick Overview
+
+<Steps>
+### Install ReactUse
+
+```bash
+pnpm add @reactuse/core
+```
+
+### Import and Use
+
+```tsx
+import { useLocalStorage, useMouse } from '@reactuse/core'
+
+function MyComponent() {
+  const [count, setCount] = useLocalStorage('count', 0)
+  const { x, y } = useMouse()
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <p>Mouse: {x}, {y}</p>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  )
+}
+```
+
+### Enjoy!
+
+You're now ready to use ReactUse in your application!
+</Steps>
+
+## Key Features
+
+### React 19+ Ready
+
+ReactUse leverages the latest React features:
+
+- **Concurrent Rendering**: All hooks are optimized for React's concurrent features
+- **Suspense Integration**: Hooks work seamlessly with Suspense boundaries
+- **New Hook APIs**: Utilizes React 19's new hook patterns where applicable
+
+### Next.js 15+ Optimized
+
+- **App Router Support**: Full compatibility with Next.js App Router
+- **Server Components**: Hooks are designed to work with server and client components
+- **SSR/SSG**: Perfect server-side rendering support
+- **Turbopack**: Optimized for Next.js's new bundler
+
+### Developer Experience
+
+- **TypeScript First**: Written in TypeScript with comprehensive type definitions
+- **IntelliSense**: Excellent auto-completion and documentation
+- **Error Handling**: Comprehensive error boundaries and exception handling
+- **Performance**: Optimized for minimal re-renders and memory usage
+
+## What's Next?
+
+- [Installation](/guide/installation) - Detailed installation instructions
+- [Quick Start](/guide/quick-start) - Get up and running quickly
+- [React 19 Features](/guide/react-19) - Learn about React 19 integration
+- [Next.js Integration](/guide/nextjs) - Next.js specific features
+- [Functions](/functions) - Browse all available hooks

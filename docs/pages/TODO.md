@@ -5,11 +5,11 @@
 ## 核心函数 (Core Functions)
 
 ### State 状态管理
-- [ ] createGlobalState - 在全局范围内保持状态，可在 Vue 实例间重用
+- [x] createGlobalState - 在全局范围内保持状态，可在 Vue 实例间重用
 - [ ] injectLocal - 扩展的 inject，能够调用 provideLocal 在同一组件中提供值
 - [ ] provideLocal - 扩展的 provide，能够调用 injectLocal 在同一组件中获取值
-- [ ] useLocalStorage - 响应式 LocalStorage
-- [ ] useSessionStorage - 响应式 SessionStorage
+- [x] useLocalStorage - 响应式 LocalStorage
+- [x] useSessionStorage - 响应式 SessionStorage
 - [ ] useStorage - 响应式 LocalStorage/SessionStorage
 
 ### Elements 元素操作
@@ -25,13 +25,13 @@
 - [ ] useActiveElement - 响应式 document.activeElement
 - [ ] useBreakpoints - 响应式视口断点
 - [ ] useBrowserLocation - 响应式浏览器位置
-- [ ] useClipboard - 响应式剪贴板 API
-- [ ] useColorMode - 响应式颜色模式（深色/浅色/自定义）与自动数据持久化
+- [x] useClipboard - 响应式剪贴板 API
+- [x] useColorMode - 响应式颜色模式（深色/浅色/自定义）与自动数据持久化
 - [ ] useCssVar - 操作 CSS 变量
-- [ ] useDark - 响应式深色模式与自动数据持久化
-- [ ] useEventListener - 轻松使用 EventListener
+- [x] useDark - 响应式深色模式与自动数据持久化
+- [x] useEventListener - 轻松使用 EventListener
 - [ ] useFavicon - 响应式网站图标
-- [ ] useFetch - 响应式 Fetch API，提供中止请求的能力
+- [x] useFetch - 响应式 Fetch API，提供中止请求的能力
 - [ ] useFullscreen - 响应式全屏 API
 - [ ] useImage - 在浏览器中响应式加载图片
 - [ ] useMediaControls - 音频和视频元素的响应式媒体控制
@@ -46,7 +46,7 @@
 - [ ] useUrlSearchParams - 响应式 URLSearchParams
 
 ### Sensors 传感器
-- [ ] onClickOutside - 监听元素外部的点击
+- [x] onClickOutside - 监听元素外部的点击
 - [ ] onKeyStroke - 监听键盘按键
 - [ ] onStartTyping - 当用户在非可编辑元素上开始输入时触发
 - [ ] useBattery - 响应式电池状态 API
@@ -63,7 +63,7 @@
 - [ ] useIdle - 跟踪用户是否处于非活动状态
 - [ ] useIntersectionObserver - 检测目标元素的可见性
 - [ ] useMagicKeys - 响应式按键状态
-- [ ] useMouse - 响应式鼠标位置
+- [x] useMouse - 响应式鼠标位置
 - [ ] useMouseInElement - 相对于元素的响应式鼠标位置
 - [ ] useMousePressed - 响应式鼠标按下状态
 - [ ] useMutationObserver - 监视 DOM 树的变化
@@ -76,7 +76,7 @@
 - [ ] useSwipe - 基于 TouchEvents 的响应式滑动检测
 - [ ] useUserMedia - 响应式 mediaDevices.getUserMedia 流
 - [ ] useWindowScroll - 响应式窗口滚动
-- [ ] useWindowSize - 响应式窗口大小
+- [x] useWindowSize - 响应式窗口大小
 
 ### Network 网络
 - [ ] useFetch - 响应式 Fetch API，提供中止请求的能力
@@ -162,12 +162,12 @@
 - [ ] useAsyncState - 响应式异步状态
 - [ ] useCached - 使用自定义比较器缓存 ref
 - [ ] useConfirmDialog - 创建事件钩子以支持模态和确认对话框链
-- [ ] useCounter - 带实用函数的基本计数器
+- [x] useCounter - 带实用函数的基本计数器
 - [ ] useDebounce - 防抖执行
 - [ ] useMemoize - 根据参数缓存函数结果并保持响应式
 - [ ] useStepper - 提供构建多步向导界面的助手
 - [ ] useThrottle - 节流执行
-- [ ] useToggle - 带实用函数的布尔切换器
+- [x] useToggle - 带实用函数的布尔切换器
 
 ## 扩展包 (Add-ons)
 
@@ -250,8 +250,8 @@
 - State: useLocalStorage, useSessionStorage, createGlobalState
 - Browser: useDark, useColorMode, useClipboard, useFetch
 - Sensors: useMouse, useKeyboard, useWindowSize, useElementSize
-- Animation: useInterval, useTimeout, useNow
-- Utilities: useToggle, useCounter, useDebounce, useThrottle
+- Animation: ✅ useInterval, ✅ useTimeout, ✅ useNow
+- Utilities: useToggle, useCounter, ✅ useDebounce, ✅ useThrottle
 
 ### 第二阶段 - 常用功能 (P1)
 - Elements: useResizeObserver, useElementVisibility, useIntersectionObserver
@@ -287,14 +287,14 @@
 - [ ] 设置 CI/CD 流程
 
 ### Phase 2: 核心 Hooks 开发 (Week 2-4)
-- [ ] 实现状态管理类 hooks
-  - [ ] useLocalStorage
-  - [ ] useSessionStorage
-  - [ ] useToggle
-  - [ ] useCounter
+- [x] 实现状态管理类 hooks
+  - [x] useLocalStorage
+  - [x] useSessionStorage
+  - [x] useToggle
+  - [x] useCounter
 - [ ] 实现浏览器 API 类 hooks
-  - [ ] useMouse
-  - [ ] useWindowSize
+  - [x] useMouse
+  - [x] useWindowSize
   - [ ] useScroll
   - [ ] useClipboard
 - [ ] 实现网络请求类 hooks
@@ -305,8 +305,8 @@
 
 ### Phase 3: DOM 操作和高级功能 (Week 5-6)
 - [ ] 实现 DOM 操作类 hooks
-  - [ ] useEventListener
-  - [ ] useClickOutside
+  - [x] useEventListener
+  - [x] useClickOutside
   - [ ] useIntersectionObserver
 - [ ] 实现高级功能 hooks
   - [ ] useVirtualList
@@ -373,9 +373,9 @@
 ## 进度跟踪
 
 - 总计函数数量: 200+
-- 已完成: 0
-- 进行中: 1 (项目初始化)
-- 待开始: 200+
+- 已完成: 18 (useLocalStorage, useSessionStorage, useToggle, useCounter, useMouse, useWindowSize, useEventListener, useClickOutside, createGlobalState, useDark, useColorMode, useClipboard, useFetch, useDebounce, useThrottle, useInterval, useTimeout, useNow)
+- 进行中: 0
+- 待开始: 182+
 
 ---
 

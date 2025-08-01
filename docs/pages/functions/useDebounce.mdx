@@ -1,0 +1,181 @@
+# useDebounce
+
+防抖工具函数，延迟执行函数调用直到指定时间内没有新的调用。
+
+## 基本用法
+
+### useDebounce
+
+用于防抖响应式值的变化：
+
+```tsx
+import { useDebounce } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [input, setInput] = useState('')
+  const debouncedValue = useDebounce(input, 500)
+
+  return (
+    <div>
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="输入内容..."
+      />
+      <p>输入值: {input}</p>
+      <p>防抖值: {debouncedValue}</p>
+    </div>
+  )
+}
+```
+
+### useDebounceFn
+
+用于防抖函数调用：
+
+```tsx
+import { useDebounceFn } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [count, setCount] = useState(0)
+  
+  const debouncedIncrement = useDebounceFn(() => {
+    setCount(c => c + 1)
+  }, 500)
+
+  return (
+    <div>
+      <p>计数: {count}</p>
+      <button onClick={debouncedIncrement}>
+        点击增加 (防抖 500ms)
+      </button>
+    </div>
+  )
+}
+```
+
+## 高级用法
+
+### 配置选项
+
+```tsx
+import { useDebounceFn } from '@reactuse/core'
+
+function Demo() {
+  // 立即执行第一次调用
+  const debouncedFn = useDebounceFn(
+    () => console.log('执行'),
+    500,
+    { immediate: true }
+  )
+
+  // 在前沿和后沿都执行
+  const debouncedFn2 = useDebounceFn(
+    () => console.log('执行'),
+    500,
+    { leading: true, trailing: true }
+  )
+
+  return (
+    <div>
+      <button onClick={debouncedFn}>立即执行</button>
+      <button onClick={debouncedFn2}>前沿后沿执行</button>
+    </div>
+  )
+}
+```
+
+### 手动控制
+
+```tsx
+import { useDebounceFn } from '@reactuse/core'
+
+function Demo() {
+  const { run, cancel, flush } = useDebounceFn(
+    () => console.log('执行'),
+    500
+  )
+
+  return (
+    <div>
+      <button onClick={run}>执行</button>
+      <button onClick={cancel}>取消</button>
+      <button onClick={flush}>立即执行</button>
+    </div>
+  )
+}
+```
+
+## API
+
+### useDebounce
+
+```typescript
+function useDebounce<T>(
+  value: T,
+  delay: number,
+  options?: DebounceOptions
+): T
+```
+
+**参数：**
+
+- `value`: 要防抖的值
+- `delay`: 延迟时间（毫秒）
+- `options`: 配置选项
+
+**返回值：**
+
+- 防抖后的值
+
+### useDebounceFn
+
+```typescript
+function useDebounceFn<T extends (...args: any[]) => any>(
+  fn: T,
+  delay: number,
+  options?: DebounceOptions
+): {
+  run: T
+  cancel: () => void
+  flush: () => ReturnType<T> | undefined
+}
+```
+
+**参数：**
+
+- `fn`: 要防抖的函数
+- `delay`: 延迟时间（毫秒）
+- `options`: 配置选项
+
+**返回值：**
+
+- `run`: 防抖后的函数
+- `cancel`: 取消待执行的函数
+- `flush`: 立即执行待执行的函数
+
+### DebounceOptions
+
+```typescript
+interface DebounceOptions {
+  leading?: boolean   // 是否在前沿执行，默认 false
+  trailing?: boolean  // 是否在后沿执行，默认 true
+  immediate?: boolean // 是否立即执行第一次调用，默认 false
+}
+```
+
+## 使用场景
+
+- **搜索输入框**：防止频繁的 API 调用
+- **按钮点击**：防止重复提交
+- **窗口大小调整**：优化性能
+- **滚动事件**：减少事件处理频率
+
+## 注意事项
+
+1. 防抖会延迟函数执行，适用于只关心最后一次调用的场景
+2. 如果需要限制函数执行频率但不延迟，请使用 `useThrottle`
+3. 组件卸载时会自动清理定时器
+4. 支持 SSR，在服务端不会执行定时器逻辑

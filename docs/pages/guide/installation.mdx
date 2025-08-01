@@ -1,0 +1,166 @@
+import { Callout, Tabs } from 'nextra/components'
+
+# Installation
+
+ReactUse is designed for modern React applications using React 19+ and Next.js 15+.
+
+## Requirements
+
+<Callout type="warning">
+  ReactUse requires React 19+ and is optimized for Next.js 15+. Make sure your project meets these requirements before installation.
+</Callout>
+
+- **React**: 19.1.0 or higher
+- **TypeScript**: 5.7 or higher (recommended)
+- **Node.js**: 20.0 or higher
+- **Next.js**: 15.4 or higher (for Next.js projects)
+
+## Package Manager
+
+We recommend using `pnpm` as your package manager for the best experience:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm add @reactuse/core
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm install @reactuse/core
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn add @reactuse/core
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## Available Packages
+
+ReactUse is organized into multiple packages for optimal tree-shaking:
+
+### Core Package
+
+```bash
+pnpm add @reactuse/core
+```
+
+The main package containing essential React hooks:
+
+- State management hooks (`useLocalStorage`, `useSessionStorage`, `useToggle`, `useCounter`)
+- Sensor hooks (`useMouse`, `useWindowSize`)
+- DOM hooks (`useEventListener`, `useClickOutside`)
+- And many more...
+
+### Shared Package
+
+```bash
+pnpm add @reactuse/shared
+```
+
+Shared utilities and types used across ReactUse packages. Usually installed automatically as a dependency.
+
+## Next.js Setup
+
+For Next.js projects, ensure you're using the App Router and have the correct configuration:
+
+### next.config.js
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    // Enable React 19 features
+    reactCompiler: true,
+  },
+  // Ensure proper ESM handling
+  transpilePackages: ['@reactuse/core', '@reactuse/shared'],
+}
+
+module.exports = nextConfig
+```
+
+### TypeScript Configuration
+
+Ensure your `tsconfig.json` includes the necessary settings:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  }
+}
+```
+
+## Verification
+
+To verify your installation, create a simple test component:
+
+```tsx
+'use client'
+
+import { useLocalStorage } from '@reactuse/core'
+
+export default function TestComponent() {
+  const [value, setValue] = useLocalStorage('test', 'Hello ReactUse!')
+
+  return (
+    <div>
+      <p>{value}</p>
+      <button onClick={() => setValue('Installation successful!')}>
+        Test ReactUse
+      </button>
+    </div>
+  )
+}
+```
+
+If this component works without errors, ReactUse is properly installed!
+
+## Troubleshooting
+
+### Module Resolution Issues
+
+If you encounter module resolution issues, try:
+
+1. Clear your package manager cache:
+   ```bash
+   pnpm store prune
+   # or
+   npm cache clean --force
+   # or
+   yarn cache clean
+   ```
+
+2. Delete `node_modules` and reinstall:
+   ```bash
+   rm -rf node_modules
+   pnpm install
+   ```
+
+### TypeScript Errors
+
+Ensure you have the latest TypeScript version and proper configuration. ReactUse requires TypeScript 5.7+ for optimal type support.
+
+### Next.js Issues
+
+Make sure you're using Next.js 15.4+ with the App Router. ReactUse is not tested with the Pages Router.
+
+<Callout type="info">
+  Need help? Check our [GitHub Issues](https://github.com/reactuse/reactuse/issues) or start a [Discussion](https://github.com/reactuse/reactuse/discussions).
+</Callout>
+
+## What's Next?
+
+- [Quick Start](/guide/quick-start) - Start using ReactUse immediately
+- [React 19 Features](/guide/react-19) - Learn about React 19 integration
+- [Functions](/functions) - Browse all available hooks

@@ -1,0 +1,311 @@
+import { Callout, Tabs } from 'nextra/components'
+
+# useLocalStorage
+
+Reactive localStorage hook with SSR support, type safety, and cross-tab synchronization.
+
+## Features
+
+- 🔄 **Reactive**: Automatically updates when localStorage changes
+- 🌐 **SSR Compatible**: Works with Next.js server-side rendering
+- 🔒 **Type Safe**: Full TypeScript support with generic types
+- 🔄 **Cross-tab Sync**: Synchronizes across browser tabs
+- 🛡️ **Error Handling**: Graceful fallback when localStorage is unavailable
+- 📦 **Serialization**: Custom serialization support for complex types
+
+## Usage
+
+### Basic Usage
+
+```tsx
+import { useLocalStorage } from '@reactuse/core'
+
+function MyComponent() {
+  const [name, setName] = useLocalStorage('user-name', 'Anonymous')
+
+  return (
+    <div>
+      <p>Hello, {name}!</p>
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Enter your name"
+      />
+    </div>
+  )
+}
+```
+
+### With TypeScript
+
+```tsx
+interface User {
+  id: number
+  name: string
+  email: string
+}
+
+function UserProfile() {
+  const [user, setUser] = useLocalStorage<User | null>('user', null)
+
+  const handleLogin = (userData: User) => {
+    setUser(userData)
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+  }
+
+  return (
+    <div>
+      {user ? (
+        <div>
+          <h1>Welcome, {user.name}!</h1>
+          <p>Email: {user.email}</p>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      ) : (
+        <button onClick={() => handleLogin({ id: 1, name: 'John', email: 'john@example.com' })}>
+          Login
+        </button>
+      )}
+    </div>
+  )
+}
+```
+
+### Custom Serialization
+
+```tsx
+import { useLocalStorage } from '@reactuse/core'
+
+// Custom serializer for Date objects
+const dateSerializer = {
+  read: (value: string) => new Date(value),
+  write: (value: Date) => value.toISOString()
+}
+
+function DatePicker() {
+  const [selectedDate, setSelectedDate] = useLocalStorage(
+    'selected-date',
+    new Date(),
+    {
+      serializer: dateSerializer
+    }
+  )
+
+  return (
+    <div>
+      <p>Selected: {selectedDate.toLocaleDateString()}</p>
+      <button onClick={() => setSelectedDate(new Date())}>
+        Set to Today
+      </button>
+    </div>
+  )
+}
+```
+
+### With Options
+
+```tsx
+function AdvancedExample() {
+  const [settings, setSettings] = useLocalStorage(
+    'app-settings',
+    { theme: 'light', language: 'en' },
+    {
+      syncAcrossTabs: true,
+      onError: (error) => {
+        console.error('localStorage error:', error)
+      }
+    }
+  )
+
+  return (
+    <div>
+      <select
+        value={settings.theme}
+        onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
+      >
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | `string` | The localStorage key |
+| `defaultValue` | `T` | Default value when key doesn't exist |
+| `options` | `UseLocalStorageOptions<T>` | Configuration options |
+
+### Options
+
+```tsx
+interface UseLocalStorageOptions<T> {
+  syncAcrossTabs?: boolean
+  serializer?: {
+    read: (value: string) => T
+    write: (value: T) => string
+  }
+  onError?: (error: Error) => void
+}
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `syncAcrossTabs` | `boolean` | `true` | Enable cross-tab synchronization |
+| `serializer` | `Serializer<T>` | `JSON` | Custom serialization functions |
+| `onError` | `(error: Error) => void` | `undefined` | Error handler callback |
+
+### Returns
+
+```tsx
+[
+  value: T,
+  setValue: (value: T | ((prev: T) => T)) => void,
+  remove: () => void
+]
+```
+
+| Return | Type | Description |
+|--------|------|-------------|
+| `value` | `T` | Current value from localStorage |
+| `setValue` | `Function` | Function to update the value |
+| `remove` | `Function` | Function to remove the key from localStorage |
+
+## Type-specific Helpers
+
+ReactUse provides type-specific helpers for common use cases:
+
+<Tabs items={['String', 'Number', 'Boolean', 'Object']}>
+  <Tabs.Tab>
+    ```tsx
+    import { useLocalStorageString } from '@reactuse/core'
+
+    function StringExample() {
+      const [text, setText] = useLocalStorageString('text', 'Hello')
+      return (
+        <input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      )
+    }
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { useLocalStorageNumber } from '@reactuse/core'
+
+    function NumberExample() {
+      const [count, setCount] = useLocalStorageNumber('count', 0)
+      return (
+        <div>
+          <p>Count: {count}</p>
+          <button onClick={() => setCount(count + 1)}>+</button>
+        </div>
+      )
+    }
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { useLocalStorageBoolean } from '@reactuse/core'
+
+    function BooleanExample() {
+      const [isEnabled, setIsEnabled] = useLocalStorageBoolean('enabled', false)
+      return (
+        <label>
+          <input
+            type="checkbox"
+            checked={isEnabled}
+            onChange={(e) => setIsEnabled(e.target.checked)}
+          />
+          Enable feature
+        </label>
+      )
+    }
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { useLocalStorageObject } from '@reactuse/core'
+
+    interface Settings {
+      theme: string
+      notifications: boolean
+    }
+
+    function ObjectExample() {
+      const [settings, setSettings] = useLocalStorageObject<Settings>(
+        'settings',
+        { theme: 'light', notifications: true }
+      )
+      
+      return (
+        <div>
+          <select
+            value={settings.theme}
+            onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+      )
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## SSR Considerations
+
+<Callout type="info">
+  `useLocalStorage` is designed to work seamlessly with Next.js SSR. The hook will use the default value during server-side rendering and hydrate with the actual localStorage value on the client.
+</Callout>
+
+```tsx
+// This works perfectly with Next.js SSR
+function SSRComponent() {
+  const [theme, setTheme] = useLocalStorage('theme', 'light')
+  
+  // During SSR: theme will be 'light'
+  // After hydration: theme will be the actual value from localStorage
+  
+  return <div className={`theme-${theme}`}>Content</div>
+}
+```
+
+## Error Handling
+
+The hook gracefully handles cases where localStorage is unavailable:
+
+```tsx
+function ErrorHandlingExample() {
+  const [value, setValue] = useLocalStorage(
+    'key',
+    'default',
+    {
+      onError: (error) => {
+        // Handle localStorage errors (e.g., quota exceeded, private browsing)
+        console.error('localStorage error:', error)
+        // You could show a toast notification here
+      }
+    }
+  )
+
+  return <div>{value}</div>
+}
+```
+
+## Related
+
+- [useSessionStorage](/functions/useSessionStorage) - Similar hook for sessionStorage
+- [useToggle](/functions/useToggle) - For boolean state management
+- [useCounter](/functions/useCounter) - For numeric state management

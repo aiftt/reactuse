@@ -1,0 +1,303 @@
+# useNow
+
+响应式当前时间，提供实时更新的时间值。
+
+## 基本用法
+
+### useNow
+
+获取实时更新的当前时间：
+
+```tsx
+import { useNow } from '@reactuse/core'
+
+function Demo() {
+  const now = useNow()
+
+  return (
+    <div>
+      <p>当前时间: {now.toLocaleString()}</p>
+    </div>
+  )
+}
+```
+
+### useTimestamp
+
+获取实时更新的时间戳：
+
+```tsx
+import { useTimestamp } from '@reactuse/core'
+
+function Demo() {
+  const timestamp = useTimestamp()
+
+  return (
+    <div>
+      <p>时间戳: {timestamp}</p>
+      <p>日期: {new Date(timestamp).toLocaleString()}</p>
+    </div>
+  )
+}
+```
+
+### usePerformanceNow
+
+获取高精度时间戳：
+
+```tsx
+import { usePerformanceNow } from '@reactuse/core'
+
+function Demo() {
+  const performanceNow = usePerformanceNow()
+
+  return (
+    <div>
+      <p>高精度时间戳: {performanceNow.toFixed(3)}ms</p>
+    </div>
+  )
+}
+```
+
+## 高级用法
+
+### 自定义更新间隔
+
+```tsx
+import { useNow } from '@reactuse/core'
+
+function Demo() {
+  // 每100毫秒更新一次
+  const now = useNow({ interval: 100 })
+
+  return (
+    <div>
+      <p>高频更新时间: {now.toLocaleTimeString()}</p>
+      <p>毫秒: {now.getMilliseconds()}</p>
+    </div>
+  )
+}
+```
+
+### 可控制的时间更新
+
+```tsx
+import { useNow } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [enabled, setEnabled] = useState(true)
+  const now = useNow({ interval: enabled ? 1000 : false })
+
+  return (
+    <div>
+      <p>当前时间: {now.toLocaleString()}</p>
+      <button onClick={() => setEnabled(!enabled)}>
+        {enabled ? '暂停' : '开始'}更新
+      </button>
+    </div>
+  )
+}
+```
+
+### 数字时钟
+
+```tsx
+import { useNow } from '@reactuse/core'
+
+function DigitalClock() {
+  const now = useNow({ interval: 1000 })
+  
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('zh-CN', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    })
+  }
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long'
+    })
+  }
+
+  return (
+    <div style={{ textAlign: 'center', fontFamily: 'monospace' }}>
+      <h1 style={{ fontSize: '3rem', margin: '0' }}>
+        {formatTime(now)}
+      </h1>
+      <p style={{ fontSize: '1.2rem', color: '#666' }}>
+        {formatDate(now)}
+      </p>
+    </div>
+  )
+}
+```
+
+### 倒计时到特定时间
+
+```tsx
+import { useNow } from '@reactuse/core'
+import { useMemo } from 'react'
+
+function CountdownToNewYear() {
+  const now = useNow({ interval: 1000 })
+  
+  const timeLeft = useMemo(() => {
+    const newYear = new Date(now.getFullYear() + 1, 0, 1)
+    const diff = newYear.getTime() - now.getTime()
+    
+    if (diff <= 0) return null
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+    
+    return { days, hours, minutes, seconds }
+  }, [now])
+
+  if (!timeLeft) {
+    return <h1>🎉 新年快乐！</h1>
+  }
+
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <h2>距离新年还有：</h2>
+      <div style={{ fontSize: '2rem', fontFamily: 'monospace' }}>
+        {timeLeft.days}天 {timeLeft.hours}时 {timeLeft.minutes}分 {timeLeft.seconds}秒
+      </div>
+    </div>
+  )
+}
+```
+
+### 性能监控
+
+```tsx
+import { usePerformanceNow } from '@reactuse/core'
+import { useState, useCallback } from 'react'
+
+function PerformanceMonitor() {
+  const performanceNow = usePerformanceNow({ interval: 100 })
+  const [startTime, setStartTime] = useState<number | null>(null)
+  const [duration, setDuration] = useState<number | null>(null)
+  
+  const startMeasure = useCallback(() => {
+    setStartTime(performanceNow)
+    setDuration(null)
+  }, [performanceNow])
+  
+  const stopMeasure = useCallback(() => {
+    if (startTime !== null) {
+      setDuration(performanceNow - startTime)
+    }
+  }, [performanceNow, startTime])
+
+  return (
+    <div>
+      <p>当前性能时间: {performanceNow.toFixed(3)}ms</p>
+      {startTime && (
+        <p>测量开始时间: {startTime.toFixed(3)}ms</p>
+      )}
+      {duration && (
+        <p>持续时间: {duration.toFixed(3)}ms</p>
+      )}
+      <button onClick={startMeasure}>开始测量</button>
+      <button onClick={stopMeasure} disabled={!startTime}>
+        停止测量
+      </button>
+    </div>
+  )
+}
+```
+
+## API
+
+### useNow
+
+```typescript
+function useNow(options?: UseNowOptions): Date
+```
+
+**参数：**
+
+- `options`: 配置选项
+
+**返回值：**
+
+- 当前时间的 `Date` 对象
+
+### useTimestamp
+
+```typescript
+function useTimestamp(options?: UseNowOptions): number
+```
+
+**参数：**
+
+- `options`: 配置选项
+
+**返回值：**
+
+- 当前时间的时间戳（毫秒）
+
+### usePerformanceNow
+
+```typescript
+function usePerformanceNow(options?: UseNowOptions): number
+```
+
+**参数：**
+
+- `options`: 配置选项
+
+**返回值：**
+
+- 高精度时间戳（毫秒，支持小数）
+
+### UseNowOptions
+
+```typescript
+interface UseNowOptions {
+  interval?: number | false // 更新间隔（毫秒），false 表示不自动更新，默认 1000
+}
+```
+
+## 使用场景
+
+- **数字时钟**：显示实时时间
+- **倒计时器**：计算到特定时间的剩余时间
+- **性能监控**：测量代码执行时间
+- **实时数据**：显示数据的更新时间
+- **动画时间轴**：基于时间的动画效果
+- **会话超时**：跟踪用户会话时间
+
+## 性能考虑
+
+1. **更新频率**：根据需要调整更新间隔，避免不必要的高频更新
+2. **条件更新**：在不需要时停止更新（设置 `interval: false`）
+3. **精度选择**：
+   - `useNow`: 适用于一般时间显示
+   - `useTimestamp`: 适用于需要数值计算的场景
+   - `usePerformanceNow`: 适用于高精度性能测量
+
+## 注意事项
+
+1. 组件卸载时会自动清理定时器，避免内存泄漏
+2. 支持 SSR，在服务端返回服务器时间
+3. `usePerformanceNow` 在不支持 `performance.now()` 的环境中会回退到 `Date.now()`
+4. 默认每秒更新一次，可根据需要调整频率
+5. 设置 `interval: false` 可以停止自动更新
+
+## 相关 Hooks
+
+- [`useInterval`](/functions/useInterval) - 定时器
+- [`useTimeout`](/functions/useTimeout) - 一次性定时器
+- [`useDebounce`](/functions/useDebounce) - 防抖函数
+- [`useThrottle`](/functions/useThrottle) - 节流函数

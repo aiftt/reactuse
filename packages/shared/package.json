@@ -1,0 +1,51 @@
+{
+  "name": "@reactuse/shared",
+  "version": "0.1.0",
+  "description": "Shared utilities and types for ReactUse",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "utilities",
+    "shared",
+    "typescript"
+  ],
+  "author": "ReactUse Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reactuse/reactuse.git",
+    "directory": "packages/shared"
+  },
+  "bugs": {
+    "url": "https://github.com/reactuse/reactuse/issues"
+  },
+  "homepage": "https://reactuse.org",
+  "devDependencies": {
+    "tsup": "^8.0.1",
+    "typescript": "^5.7.0"
+  },
+  "peerDependencies": {
+    "react": ">=19.1.0"
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,296 @@
+# useTimeout
+
+响应式一次性定时器，提供可控制的延迟执行功能。
+
+## 基本用法
+
+### useTimeout
+
+创建一个简单的延迟执行：
+
+```tsx
+import { useTimeout } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [message, setMessage] = useState('等待中...')
+  
+  // 3秒后显示消息
+  useTimeout(() => {
+    setMessage('时间到！')
+  }, 3000)
+
+  return (
+    <div>
+      <p>{message}</p>
+    </div>
+  )
+}
+```
+
+### useTimeoutFn
+
+获得更多控制权的定时器：
+
+```tsx
+import { useTimeoutFn } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [message, setMessage] = useState('准备就绪')
+  
+  const { isPending, start, stop, restart } = useTimeoutFn(() => {
+    setMessage('执行完成！')
+  }, 3000)
+
+  return (
+    <div>
+      <p>{message}</p>
+      <p>状态: {isPending ? '等待中...' : '已完成'}</p>
+      <button onClick={start}>开始</button>
+      <button onClick={stop}>停止</button>
+      <button onClick={restart}>重新开始</button>
+    </div>
+  )
+}
+```
+
+## 高级用法
+
+### 动态延迟时间
+
+```tsx
+import { useTimeout } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [message, setMessage] = useState('')
+  const [delay, setDelay] = useState(1000)
+  
+  useTimeout(() => {
+    setMessage(`${delay}ms 后执行完成！`)
+  }, delay)
+
+  return (
+    <div>
+      <p>{message}</p>
+      <p>延迟时间: {delay}ms</p>
+      <button onClick={() => setDelay(1000)}>1秒</button>
+      <button onClick={() => setDelay(3000)}>3秒</button>
+      <button onClick={() => setDelay(5000)}>5秒</button>
+    </div>
+  )
+}
+```
+
+### 条件性定时器
+
+```tsx
+import { useTimeout } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [enabled, setEnabled] = useState(false)
+  const [message, setMessage] = useState('点击启用定时器')
+  
+  // 只有在 enabled 为 true 时才启动定时器
+  useTimeout(() => {
+    setMessage('定时器执行完成！')
+  }, enabled ? 2000 : null)
+
+  const handleToggle = () => {
+    setEnabled(!enabled)
+    if (!enabled) {
+      setMessage('定时器已启动，2秒后执行...')
+    } else {
+      setMessage('定时器已停止')
+    }
+  }
+
+  return (
+    <div>
+      <p>{message}</p>
+      <button onClick={handleToggle}>
+        {enabled ? '停止' : '启动'}定时器
+      </button>
+    </div>
+  )
+}
+```
+
+### 配置选项
+
+```tsx
+import { useTimeoutFn } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [count, setCount] = useState(0)
+  
+  const { isPending, start } = useTimeoutFn(
+    () => setCount(c => c + 1),
+    2000,
+    {
+      immediate: true // 立即开始定时器
+    }
+  )
+
+  return (
+    <div>
+      <p>计数: {count}</p>
+      <p>状态: {isPending ? '等待中...' : '已完成'}</p>
+      <button onClick={start} disabled={isPending}>
+        重新开始
+      </button>
+    </div>
+  )
+}
+```
+
+### 自动消失的通知
+
+```tsx
+import { useTimeoutFn } from '@reactuse/core'
+import { useState } from 'react'
+
+function NotificationDemo() {
+  const [notifications, setNotifications] = useState<string[]>([])
+  
+  const { start: startHideTimer } = useTimeoutFn(() => {
+    setNotifications(prev => prev.slice(1))
+  }, 3000)
+
+  const addNotification = () => {
+    const message = `通知 ${Date.now()}`
+    setNotifications(prev => [...prev, message])
+    startHideTimer() // 3秒后自动隐藏
+  }
+
+  return (
+    <div>
+      <button onClick={addNotification}>添加通知</button>
+      <div>
+        {notifications.map((notification, index) => (
+          <div key={index} style={{
+            padding: '8px',
+            margin: '4px 0',
+            background: '#f0f0f0',
+            borderRadius: '4px'
+          }}>
+            {notification}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### 延迟加载
+
+```tsx
+import { useTimeoutFn } from '@reactuse/core'
+import { useState } from 'react'
+
+function LazyLoadDemo() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [content, setContent] = useState('')
+  
+  const { isPending } = useTimeoutFn(() => {
+    setContent('内容加载完成！')
+    setIsLoading(false)
+  }, 2000, { immediate: true })
+
+  if (isLoading) {
+    return (
+      <div>
+        <p>加载中... {isPending ? '请稍候' : '即将完成'}</p>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <h2>{content}</h2>
+    </div>
+  )
+}
+```
+
+## API
+
+### useTimeout
+
+```typescript
+function useTimeout(
+  callback: () => void,
+  delay: number | null,
+  options?: TimeoutOptions
+): void
+```
+
+**参数：**
+
+- `callback`: 要延迟执行的函数
+- `delay`: 延迟时间（毫秒），传入 `null` 可取消定时器
+- `options`: 配置选项
+
+### useTimeoutFn
+
+```typescript
+function useTimeoutFn(
+  callback: () => void,
+  delay: number,
+  options?: TimeoutOptions
+): {
+  isPending: boolean
+  start: () => void
+  stop: () => void
+  restart: () => void
+}
+```
+
+**参数：**
+
+- `callback`: 要延迟执行的函数
+- `delay`: 延迟时间（毫秒）
+- `options`: 配置选项
+
+**返回值：**
+
+- `isPending`: 定时器是否正在等待执行
+- `start`: 开始定时器
+- `stop`: 停止定时器
+- `restart`: 重启定时器
+
+### TimeoutOptions
+
+```typescript
+interface TimeoutOptions {
+  immediate?: boolean // 是否立即开始，默认 false
+}
+```
+
+## 使用场景
+
+- **延迟执行**：延迟执行某些操作
+- **自动隐藏**：通知、提示信息的自动消失
+- **延迟加载**：延迟加载内容或组件
+- **防抖操作**：配合其他逻辑实现防抖效果
+- **超时处理**：设置操作超时时间
+
+## 注意事项
+
+1. 组件卸载时会自动清理定时器，避免内存泄漏
+2. 当 `delay` 为 `null` 时，定时器会被取消
+3. 支持 SSR，在服务端不会启动定时器
+4. 回调函数会被自动记忆化，避免不必要的定时器重启
+5. 使用 `useTimeoutFn` 可以获得更多的控制权
+6. 定时器只会执行一次，如需重复执行请使用 `useInterval`
+
+## 相关 Hooks
+
+- [`useInterval`](/functions/useInterval) - 重复执行的定时器
+- [`useNow`](/functions/useNow) - 响应式当前时间
+- [`useDebounce`](/functions/useDebounce) - 防抖函数
+- [`useThrottle`](/functions/useThrottle) - 节流函数

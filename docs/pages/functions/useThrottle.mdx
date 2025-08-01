@@ -1,0 +1,219 @@
+# useThrottle
+
+节流工具函数，限制函数在指定时间间隔内最多执行一次。
+
+## 基本用法
+
+### useThrottle
+
+用于节流响应式值的变化：
+
+```tsx
+import { useThrottle } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [input, setInput] = useState('')
+  const throttledValue = useThrottle(input, 500)
+
+  return (
+    <div>
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="输入内容..."
+      />
+      <p>输入值: {input}</p>
+      <p>节流值: {throttledValue}</p>
+    </div>
+  )
+}
+```
+
+### useThrottleFn
+
+用于节流函数调用：
+
+```tsx
+import { useThrottleFn } from '@reactuse/core'
+import { useState } from 'react'
+
+function Demo() {
+  const [count, setCount] = useState(0)
+  
+  const throttledIncrement = useThrottleFn(() => {
+    setCount(c => c + 1)
+  }, 500)
+
+  return (
+    <div>
+      <p>计数: {count}</p>
+      <button onClick={throttledIncrement}>
+        点击增加 (节流 500ms)
+      </button>
+    </div>
+  )
+}
+```
+
+## 高级用法
+
+### 配置选项
+
+```tsx
+import { useThrottleFn } from '@reactuse/core'
+
+function Demo() {
+  // 只在前沿执行
+  const throttledFn = useThrottleFn(
+    () => console.log('执行'),
+    500,
+    { leading: true, trailing: false }
+  )
+
+  // 只在后沿执行
+  const throttledFn2 = useThrottleFn(
+    () => console.log('执行'),
+    500,
+    { leading: false, trailing: true }
+  )
+
+  return (
+    <div>
+      <button onClick={throttledFn}>前沿执行</button>
+      <button onClick={throttledFn2}>后沿执行</button>
+    </div>
+  )
+}
+```
+
+### 手动控制
+
+```tsx
+import { useThrottleFn } from '@reactuse/core'
+
+function Demo() {
+  const { run, cancel, flush } = useThrottleFn(
+    () => console.log('执行'),
+    500
+  )
+
+  return (
+    <div>
+      <button onClick={run}>执行</button>
+      <button onClick={cancel}>取消</button>
+      <button onClick={flush}>立即执行</button>
+    </div>
+  )
+}
+```
+
+### 滚动事件优化
+
+```tsx
+import { useThrottleFn } from '@reactuse/core'
+import { useEffect, useState } from 'react'
+
+function Demo() {
+  const [scrollY, setScrollY] = useState(0)
+  
+  const throttledScroll = useThrottleFn(() => {
+    setScrollY(window.scrollY)
+  }, 100)
+
+  useEffect(() => {
+    window.addEventListener('scroll', throttledScroll)
+    return () => window.removeEventListener('scroll', throttledScroll)
+  }, [throttledScroll])
+
+  return (
+    <div style={{ height: '200vh' }}>
+      <div style={{ position: 'fixed', top: 0 }}>
+        滚动位置: {scrollY}px
+      </div>
+    </div>
+  )
+}
+```
+
+## API
+
+### useThrottle
+
+```typescript
+function useThrottle<T>(
+  value: T,
+  delay: number,
+  options?: ThrottleOptions
+): T
+```
+
+**参数：**
+
+- `value`: 要节流的值
+- `delay`: 节流间隔时间（毫秒）
+- `options`: 配置选项
+
+**返回值：**
+
+- 节流后的值
+
+### useThrottleFn
+
+```typescript
+function useThrottleFn<T extends (...args: any[]) => any>(
+  fn: T,
+  delay: number,
+  options?: ThrottleOptions
+): {
+  run: T
+  cancel: () => void
+  flush: () => ReturnType<T> | undefined
+}
+```
+
+**参数：**
+
+- `fn`: 要节流的函数
+- `delay`: 节流间隔时间（毫秒）
+- `options`: 配置选项
+
+**返回值：**
+
+- `run`: 节流后的函数
+- `cancel`: 取消待执行的函数
+- `flush`: 立即执行待执行的函数
+
+### ThrottleOptions
+
+```typescript
+interface ThrottleOptions {
+  leading?: boolean   // 是否在前沿执行，默认 true
+  trailing?: boolean  // 是否在后沿执行，默认 true
+}
+```
+
+## 使用场景
+
+- **滚动事件**：优化滚动性能
+- **窗口大小调整**：限制 resize 事件处理频率
+- **按钮点击**：防止快速重复点击
+- **API 调用**：限制请求频率
+- **动画更新**：控制动画帧率
+
+## 防抖 vs 节流
+
+| 特性 | 防抖 (Debounce) | 节流 (Throttle) |
+|------|----------------|----------------|
+| **执行时机** | 延迟执行，等待静默期 | 定期执行，限制频率 |
+| **适用场景** | 搜索输入、表单验证 | 滚动事件、窗口调整 |
+| **执行频率** | 只执行最后一次 | 定期执行 |
+| **响应性** | 延迟响应 | 即时响应 |
+
+## 注意事项
+
+1. 节流会限制函数执行频率，但不会延迟第一次执行（默认配置）
+2. 如果需要延迟执行并只关心最后一次调用，请使用 `useDebounce`
+3. 组件卸载时会自动清理定时器
+4. 支持 SSR，在服务端不会执行定时器逻辑
+5. `leading` 和 `trailing` 不能同时为 `false`

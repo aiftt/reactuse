@@ -1,0 +1,71 @@
+{
+  "name": "reactuse",
+  "version": "0.1.0",
+  "description": "React hooks library inspired by VueUse",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "release": "changeset publish",
+    "docs:dev": "cd docs && pnpm dev",
+    "docs:build": "cd docs && pnpm build",
+    "docs:preview": "cd docs && pnpm preview"
+  },
+  "workspaces": [
+    "packages/*",
+    "docs",
+    "playground"
+  ],
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vitest/coverage-v8": "^1.1.0",
+    "@vitest/ui": "^1.1.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.7.0",
+    "vitest": "^1.1.0"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "utilities",
+    "vueuse",
+    "typescript",
+    "nextjs"
+  ],
+  "author": "ReactUse Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reactuse/reactuse.git"
+  },
+  "homepage": "https://reactuse.org",
+  "bugs": {
+    "url": "https://github.com/reactuse/reactuse/issues"
+  },
+  "volta": {
+    "node": "22.18.0",
+    "pnpm": "10.14.0"
+  }
+}

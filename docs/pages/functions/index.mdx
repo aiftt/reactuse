@@ -1,0 +1,64 @@
+import { Callout } from 'nextra/components'
+
+# Functions Overview
+
+ReactUse provides a comprehensive collection of React hooks organized by category. All hooks are designed for React 19+ and optimized for Next.js 15+.
+
+## State Management
+
+Hooks for managing component and application state.
+
+- **[useLocalStorage](/functions/useLocalStorage)** - Reactive localStorage with SSR support and type safety.
+- **[useSessionStorage](/functions/useSessionStorage)** - Reactive sessionStorage with cross-tab synchronization.
+- **[useToggle](/functions/useToggle)** - Toggle between boolean values or cycle through arrays.
+- **[useCounter](/functions/useCounter)** - Counter with increment, decrement, and boundary controls.
+
+## Sensors
+
+Hooks for detecting user interactions and device sensors.
+
+- **[useMouse](/functions/useMouse)** - Reactive mouse position tracking with element support.
+- **[useWindowSize](/functions/useWindowSize)** - Reactive window dimensions with orientation change detection.
+
+## DOM
+
+Hooks for DOM manipulation and event handling.
+
+- **[useEventListener](/functions/useEventListener)** - Simplified event listener management with automatic cleanup.
+- **[useClickOutside](/functions/useClickOutside)** - Detect clicks outside of specified elements.
+
+## Animation
+
+Hooks for timing, intervals, and time-based operations.
+
+- **[useInterval](/functions/useInterval)** - Reactive interval timer with pause/resume controls.
+- **[useTimeout](/functions/useTimeout)** - One-time delay execution with cancellation support.
+- **[useNow](/functions/useNow)** - Reactive current time with customizable update intervals.
+
+## Utilities
+
+Utility hooks for common programming patterns.
+
+- **[useDebounce](/functions/useDebounce)** - Debounce values and functions to limit execution frequency.
+- **[useThrottle](/functions/useThrottle)** - Throttle values and functions to control execution rate.
+
+## Usage Statistics
+
+- **Total Functions**: 13 (and growing)
+- **Categories**: 5 main categories
+- **React 19+ Ready**: All functions
+- **SSR Compatible**: All functions
+- **TypeScript**: Full type safety
+
+## Coming Soon
+
+We're actively working on adding more hooks. Check our [roadmap](https://github.com/reactuse/reactuse/blob/main/TODO.md) for upcoming features:
+
+- Browser API hooks (clipboard, geolocation, etc.)
+- Network hooks (fetch, websocket, etc.)
+- Element hooks (resize observer, intersection observer, etc.)
+- Math and array utility hooks
+
+## Contributing
+
+Want to contribute a new hook? Check our [contributing guide](https://github.com/reactuse/reactuse/blob/main/CONTRIBUTING.md) to get started!
